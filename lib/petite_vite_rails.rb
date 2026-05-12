@@ -1,4 +1,5 @@
 require_relative "petite_vite_rails/version"
+require_relative "petite_vite_rails/view_helper"
 require_relative "petite_vite_rails/railtie"
 
 module PetiteVite
