@@ -44,7 +44,7 @@ class PetiteViteViewHelperTest < ActionView::TestCase
     FileUtils.remove_entry(@tmpdir)
   end
 
-  test "vite_tags in development emits the vite client and the entrypoint output" do
+  def test_vite_tags_in_development_emits_the_vite_client_and_the_entrypoint_output
     Rails.env.stub(:development?, true) do
       tag = vite_tags
 
@@ -54,7 +54,7 @@ class PetiteViteViewHelperTest < ActionView::TestCase
     end
   end
 
-  test "vite_tags in production emits stylesheets, module script, and modulepreloads for entries" do
+  def test_vite_tags_in_production_emits_stylesheets_module_script_and_modulepreloads_for_entries
     Rails.env.stub(:development?, false) do
       tag = vite_tags
 
@@ -66,7 +66,7 @@ class PetiteViteViewHelperTest < ActionView::TestCase
     end
   end
 
-  test "vite_tags in production skips non-entry chunks" do
+  def test_vite_tags_in_production_skips_non_entry_chunks
     Rails.env.stub(:development?, false) do
       tag = vite_tags
 
