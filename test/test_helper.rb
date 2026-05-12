@@ -1,7 +1,9 @@
 # Configure Rails Environment
 ENV["RAILS_ENV"] = "test"
 
-require_relative "../test/dummy/config/environment"
+rails_version = Gem::Specification.find { it.name == "rails" }.version.segments
+
+require_relative "../test/dummy-#{rails_version[0]}-#{rails_version[1]}/config/environment"
 ActiveRecord::Migrator.migrations_paths = [ File.expand_path("../test/dummy/db/migrate", __dir__) ]
 require "rails/test_help"
 
