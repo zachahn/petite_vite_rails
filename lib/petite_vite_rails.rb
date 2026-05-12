@@ -4,8 +4,9 @@ require_relative "petite_vite_rails/railtie"
 
 module PetiteVite
   class Config
-    def initialize(path)
-      @contents = JSON.parse(File.read(path))
+    def initialize(shared_json_path:, vite_manifest_relpath:)
+      @contents = JSON.parse(File.read(shared_json_path))
+      @vite_manifest_relpath = vite_manifest_relpath
     end
 
     def build_command = @contents.fetch("buildCommand")
@@ -13,6 +14,12 @@ module PetiteVite
     def entrypoint_output = @contents.fetch("entrypointOutput")
 
     def frontend_root = @contents.fetch("frontendRoot")
+
+    def manifest_path = File.join(frontend_root, @vite_manifest_relpath)
+
+    def manifest
+      @manifest ||= Manifest.new(config: self, manifest_path: manifest_path)
+    end
   end
 
   class Manifest

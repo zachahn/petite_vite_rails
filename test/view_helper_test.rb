@@ -7,8 +7,10 @@ class PetiteViteViewHelperTest < ActionView::TestCase
 
   setup do
     @tmpdir = Dir.mktmpdir
-    @manifest_path = File.join(@tmpdir, "manifest.json")
-    File.write(@manifest_path, JSON.dump({
+    frontend_root = File.join(@tmpdir, "frontend")
+    vite_manifest_relpath = "manifest.json"
+    FileUtils.mkdir_p(frontend_root)
+    File.write(File.join(frontend_root, vite_manifest_relpath), JSON.dump({
       "src/main.ts" => {
         "file" => "assets/main-abc123.js",
         "css" => ["assets/main-abc123.css"],
@@ -24,25 +26,20 @@ class PetiteViteViewHelperTest < ActionView::TestCase
       }
     }))
 
-    config_path = File.join(@tmpdir, "petite_vite.json")
-    File.write(config_path, JSON.dump({
+    shared_json_path = File.join(@tmpdir, "petite_vite.json")
+    File.write(shared_json_path, JSON.dump({
       "buildCommand" => "yarn build",
       "entrypointOutput" => "/src/main.js",
-      "frontendRoot" => "frontend"
+      "frontendRoot" => frontend_root
     }))
 
-    @previous_manifest = defined?(VITE_MANIFEST) ? VITE_MANIFEST : nil
     @previous_config = defined?(VITE_CONFIG) ? VITE_CONFIG : nil
-    Object.send(:remove_const, :VITE_MANIFEST) if defined?(VITE_MANIFEST)
     Object.send(:remove_const, :VITE_CONFIG) if defined?(VITE_CONFIG)
-    Object.const_set(:VITE_CONFIG, PetiteVite::Config.new(config_path))
-    Object.const_set(:VITE_MANIFEST, PetiteVite::Manifest.new(config: VITE_CONFIG, manifest_path: @manifest_path))
+    Object.const_set(:VITE_CONFIG, PetiteVite::Config.new(shared_json_path: shared_json_path, vite_manifest_relpath: vite_manifest_relpath))
   end
 
   teardown do
-    Object.send(:remove_const, :VITE_MANIFEST) if defined?(VITE_MANIFEST)
     Object.send(:remove_const, :VITE_CONFIG) if defined?(VITE_CONFIG)
-    Object.const_set(:VITE_MANIFEST, @previous_manifest) if @previous_manifest
     Object.const_set(:VITE_CONFIG, @previous_config) if @previous_config
     FileUtils.remove_entry(@tmpdir)
   end

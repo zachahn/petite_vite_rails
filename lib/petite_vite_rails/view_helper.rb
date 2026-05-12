@@ -25,7 +25,7 @@ module PetiteVite
         # <link rel="modulepreload" href="/{{ chunk.file }}" />
 
         out = []
-        VITE_MANIFEST.contents.each do |_name, chunk|
+        VITE_CONFIG.manifest.contents.each do |_name, chunk|
           next if !chunk["isEntry"]
           # 1
           chunk["css"]&.each do |css|
@@ -34,7 +34,7 @@ module PetiteVite
           # 2
           chunk["dynamicImports"]&.each do |imported_name|
             # 3
-            imported_chunk = VITE_MANIFEST.contents[imported_name]
+            imported_chunk = VITE_CONFIG.manifest.contents[imported_name]
             imported_chunk["css"]&.each do |css|
               out.push(%(<link rel="stylesheet" href="/#{css}" />))
             end
@@ -43,7 +43,7 @@ module PetiteVite
           out.push(%(<script type="module" src="/#{chunk.fetch("file")}"></script>))
           # 5
           chunk["dynamicImports"]&.each do |imported_name|
-            imported_chunk = VITE_MANIFEST.contents[imported_name]
+            imported_chunk = VITE_CONFIG.manifest.contents[imported_name]
             out.push(%(<link rel="modulepreload" href="/#{imported_chunk.fetch("file")}" />))
           end
         end
