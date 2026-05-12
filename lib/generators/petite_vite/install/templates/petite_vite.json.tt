@@ -1,0 +1,7 @@
+{
+  "buildCommand": "yarn run build-only",
+  "entrypointInput": "/src/main.ts",
+  "entrypointOutput": "/src/main.js",
+  "frontendRoot": "<%= options.fetch("frontend_root") %>",
+  "localServerCorsOrigin": "http://localhost:<%= options.fetch("rails_server_port") %>"
+}
