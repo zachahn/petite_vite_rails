@@ -1,0 +1,6 @@
+# typed: true
+
+VITE_CONFIG = PetiteVite::Config.new(
+  shared_json_path: Rails.root.join("config", "petite_vite.json"),
+  vite_manifest_relpath: "dist/.vite/manifest.json"
+)

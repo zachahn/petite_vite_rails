@@ -1,0 +1,8 @@
+<%= JSON.pretty_generate(
+  {
+    private: true,
+    workspaces: [
+      options.fetch("frontend_root")
+    ]
+  }
+) %>

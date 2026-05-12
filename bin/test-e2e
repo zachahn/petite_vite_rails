@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+ROOT = File.expand_path("..", __dir__)
+Dir.chdir(ROOT)
+
+require "bundler/setup"
+exec(RbConfig.ruby, File.join(ROOT, "test/e2e/test_e2e.rb"), *ARGV)

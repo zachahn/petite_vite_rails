@@ -1,0 +1,9 @@
+<%= JSON.pretty_generate(
+  {
+    buildCommand: nil,
+    entrypointInput: frontend_source_main!,
+    entrypointOutput: frontend_entrypoint_output!,
+    frontendRoot: frontend_root!,
+    localServerCorsOrigin: rails_development_url!
+  }
+) %>

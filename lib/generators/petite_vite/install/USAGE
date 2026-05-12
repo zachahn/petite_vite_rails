@@ -1,0 +1,12 @@
+Description:
+    Installs PetiteVite
+
+Options:
+    --frontend-root
+        Location of the frontend repo.
+
+    --rails-server-port
+        Defaults to 3000
+
+Example:
+    rails generate petite_vite:install
