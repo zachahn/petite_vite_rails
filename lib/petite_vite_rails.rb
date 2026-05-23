@@ -3,6 +3,10 @@ require_relative "petite_vite_rails/view_helper"
 require_relative "petite_vite_rails/railtie"
 
 module PetiteVite
+  class << self
+    attr_accessor :config
+  end
+
   class Config
     def initialize(shared_json_path:, vite_manifest_relpath:)
       @contents = JSON.parse(File.read(shared_json_path))

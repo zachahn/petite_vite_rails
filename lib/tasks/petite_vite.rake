@@ -1,14 +1,14 @@
 namespace :petite_vite do
   task build: :environment do
-    frontend_root = Rails.root / VITE_CONFIG.frontend_root
+    frontend_root = Rails.root / PetiteVite.config.frontend_root
 
     Dir.chdir(frontend_root) do
-      sh(VITE_CONFIG.build_command || "yarn run build")
+      sh(PetiteVite.config.build_command || "yarn run build")
     end
   end
 
   task place: :environment do
-    frontend_root = Rails.root / VITE_CONFIG.frontend_root
+    frontend_root = Rails.root / PetiteVite.config.frontend_root
     rails_asset_root = Rails.root / "public" / "assets"
     rails_asset_root.mkdir if !rails_asset_root.directory?
 

@@ -33,14 +33,12 @@ class PetiteViteViewHelperTest < ActionView::TestCase
       "frontendRoot" => frontend_root
     }))
 
-    @previous_config = defined?(VITE_CONFIG) ? VITE_CONFIG : nil
-    Object.send(:remove_const, :VITE_CONFIG) if defined?(VITE_CONFIG)
-    Object.const_set(:VITE_CONFIG, PetiteVite::Config.new(shared_json_path: shared_json_path, vite_manifest_relpath: vite_manifest_relpath))
+    @previous_config = PetiteVite.config
+    PetiteVite.config = PetiteVite::Config.new(shared_json_path: shared_json_path, vite_manifest_relpath: vite_manifest_relpath)
   end
 
   teardown do
-    Object.send(:remove_const, :VITE_CONFIG) if defined?(VITE_CONFIG)
-    Object.const_set(:VITE_CONFIG, @previous_config) if @previous_config
+    PetiteVite.config = @previous_config
     FileUtils.remove_entry(@tmpdir)
   end
 
