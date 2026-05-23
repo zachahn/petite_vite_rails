@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+set -u
+
+if [ "$#" -eq 0 ]; then
+  echo "usage: $0 <command> [args...]" >&2
+  exit 64
+fi
+
+cd "$(dirname "$0")/.."
+
+gemfiles=(
+  "Gemfile"
+  "gemfiles/rails-8-0"
+  "gemfiles/rails-8-1"
+)
+
+failed=()
+
+for gemfile in "${gemfiles[@]}"; do
+  echo
+  echo "===> BUNDLE_GEMFILE=$gemfile $*"
+  echo
+  if ! BUNDLE_GEMFILE="$gemfile" "$@"; then
+    failed+=("$gemfile")
+  fi
+done
+
+echo
+if [ "${#failed[@]}" -eq 0 ]; then
+  echo "All ${#gemfiles[@]} gemfiles succeeded."
+  exit 0
+else
+  echo "Failed (${#failed[@]}/${#gemfiles[@]}):"
+  for gemfile in "${failed[@]}"; do
+    echo "  - $gemfile"
+  done
+  exit 1
+fi
