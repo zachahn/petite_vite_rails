@@ -54,10 +54,14 @@ module PetiteViteRails
       run!({ "BUNDLE_GEMFILE" => nil }, ["yarn", "install"], chdir: File.join(workdir, dir), label: "yarn install (#{cell[:name]})")
     end
 
-    def run_install_generator(cell, workdir, dev_server_port:)
+    def run_install_generator(cell, workdir, dev_server_port:, rails_port:)
       bin_dev = File.join(workdir, "bin/dev")
       File.unlink(bin_dev) if File.exist?(bin_dev)
-      args = ["bundle", "exec", "rails", "g", "petite_vite:install", "--dev-server-port", dev_server_port.to_s]
+      args = [
+        "bundle", "exec", "rails", "g", "petite_vite:install",
+        "--dev-server-port", dev_server_port.to_s,
+        "--rails-development-url", "http://localhost:#{rails_port}"
+      ]
       args += ["--frontend-root", frontend_root(cell)] if cell[:frontend_root]
       run!({ "BUNDLE_GEMFILE" => nil }, args, chdir: workdir, label: "petite_vite:install")
     end
@@ -111,18 +115,6 @@ module PetiteViteRails
       port = server.addr[1]
       server.close
       port
-    end
-
-    def rewrite_ports(workdir, rails_port:)
-      procfile_path = File.join(workdir, "Procfile.dev")
-      procfile = File.read(procfile_path)
-      procfile = procfile.sub(/--port \d+/, "--port #{rails_port}")
-      File.write(procfile_path, procfile)
-
-      shared_path = File.join(workdir, "config/petite_vite.json")
-      shared = JSON.parse(File.read(shared_path))
-      shared["localServerCorsOrigin"] = "http://localhost:#{rails_port}"
-      File.write(shared_path, JSON.pretty_generate(shared))
     end
 
     def poll_ready(url, timeout: READY_TIMEOUT_S)

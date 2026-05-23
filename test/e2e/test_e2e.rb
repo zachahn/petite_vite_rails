@@ -14,12 +14,13 @@ class PetiteViteE2ETest < Minitest::Test
   def run_cell(cell)
     workdir = PetiteViteRails::E2EHarness.prepare_workdir(cell)
     vite_port = PetiteViteRails::E2EHarness.free_port
-    PetiteViteRails::E2EHarness.run_install_generator(cell, workdir, dev_server_port: vite_port)
+    rails_port = PetiteViteRails::E2EHarness.free_port
+    PetiteViteRails::E2EHarness.run_install_generator(cell, workdir, dev_server_port: vite_port, rails_port: rails_port)
     PetiteViteRails::E2EHarness.assert_install_artifacts(self, cell, workdir)
     PetiteViteRails::E2EHarness.run_scaffold_generator(cell, workdir)
     assert_scaffold_artifacts(workdir)
 
-    smoke_dev_mode(cell, workdir, vite_port: vite_port)
+    smoke_dev_mode(cell, workdir, vite_port: vite_port, rails_port: rails_port)
     smoke_prod_mode(cell, workdir)
   ensure
     if workdir && ENV["KEEP_TMP"] == "0"
@@ -35,11 +36,8 @@ class PetiteViteE2ETest < Minitest::Test
     assert_includes File.read(File.join(workdir, "config/routes.rb")), %(root "petite_vite#page")
   end
 
-  def smoke_dev_mode(cell, workdir, vite_port:)
-    rails_port = PetiteViteRails::E2EHarness.free_port
-    PetiteViteRails::E2EHarness.rewrite_ports(workdir, rails_port: rails_port)
-
-    pid = PetiteViteRails::E2EHarness.spawn_pgroup({ "BUNDLE_GEMFILE" => nil }, ["bin/dev"], chdir: workdir)
+  def smoke_dev_mode(cell, workdir, vite_port:, rails_port:)
+    pid = PetiteViteRails::E2EHarness.spawn_pgroup({ "BUNDLE_GEMFILE" => nil, "PORT" => rails_port.to_s }, ["bin/dev"], chdir: workdir)
     register_cleanup(pid)
     begin
       PetiteViteRails::E2EHarness.poll_ready("http://localhost:#{rails_port}/")
@@ -66,7 +64,7 @@ class PetiteViteE2ETest < Minitest::Test
     assert_path_exists File.join(workdir, PetiteViteRails::E2EHarness.frontend_root(cell), "dist/.vite/manifest.json")
 
     rails_port = PetiteViteRails::E2EHarness.free_port
-    pid = PetiteViteRails::E2EHarness.spawn_pgroup(env, ["bundle", "exec", "rails", "s", "-p", rails_port.to_s], chdir: workdir)
+    pid = PetiteViteRails::E2EHarness.spawn_pgroup(env.merge("PORT" => rails_port.to_s), ["bundle", "exec", "rails", "s"], chdir: workdir)
     register_cleanup(pid)
     begin
       PetiteViteRails::E2EHarness.poll_ready("http://localhost:#{rails_port}/")
