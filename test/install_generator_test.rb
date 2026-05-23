@@ -44,9 +44,10 @@ class PetiteVite::InstallGeneratorTest < Rails::Generators::TestCase
     assert_file "config/initializers/petite_vite.rb"
     assert_file "config/petite_vite.json" do |contents|
       shared = JSON.parse(contents)
-      %w[buildCommand entrypointInput entrypointOutput frontendRoot localServerCorsOrigin].each do |key|
+      %w[buildCommand devServerPort entrypointInput entrypointOutput frontendRoot localServerCorsOrigin].each do |key|
         assert shared.key?(key), "expected petite_vite.json to have key #{key.inspect}"
       end
+      assert_equal 5173, shared["devServerPort"]
     end
   end
 
@@ -78,6 +79,22 @@ class PetiteVite::InstallGeneratorTest < Rails::Generators::TestCase
 
     assert_file "frontend/vite.config.ts" do |contents|
       assert_includes contents, "shared.localServerCorsOrigin"
+    end
+  end
+
+  def test_injects_shared_dev_server_port_into_vite_config
+    run_generator
+
+    assert_file "frontend/vite.config.ts" do |contents|
+      assert_includes contents, "shared.devServerPort"
+    end
+  end
+
+  def test_dev_server_port_option_overrides_default
+    run_generator ["--dev-server-port", "6173"]
+
+    assert_file "config/petite_vite.json" do |contents|
+      assert_equal 6173, JSON.parse(contents)["devServerPort"]
     end
   end
 

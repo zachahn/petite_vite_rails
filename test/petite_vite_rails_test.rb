@@ -51,6 +51,41 @@ class PetiteViteRailsTest < ActiveSupport::TestCase
     end
   end
 
+  def test_dev_server_port_defaults_to_5173_when_absent
+    Dir.mktmpdir do |tmpdir|
+      shared_json_path = File.join(tmpdir, "petite_vite.json")
+      File.write(shared_json_path, JSON.dump({"frontendRoot" => "frontend"}))
+
+      config = PetiteVite::Config.new(shared_json_path: shared_json_path, vite_manifest_relpath: "manifest.json")
+
+      assert_equal 5173, config.dev_server_port
+    end
+  end
+
+  def test_dev_server_port_reads_value_when_present
+    Dir.mktmpdir do |tmpdir|
+      shared_json_path = File.join(tmpdir, "petite_vite.json")
+      File.write(shared_json_path, JSON.dump({"frontendRoot" => "frontend", "devServerPort" => 6000}))
+
+      config = PetiteVite::Config.new(shared_json_path: shared_json_path, vite_manifest_relpath: "manifest.json")
+
+      assert_equal 6000, config.dev_server_port
+    end
+  end
+
+  def test_dev_server_port_raises_when_not_an_integer
+    Dir.mktmpdir do |tmpdir|
+      shared_json_path = File.join(tmpdir, "petite_vite.json")
+      File.write(shared_json_path, JSON.dump({"frontendRoot" => "frontend", "devServerPort" => "5173"}))
+
+      config = PetiteVite::Config.new(shared_json_path: shared_json_path, vite_manifest_relpath: "manifest.json")
+
+      error = assert_raises(RuntimeError) { config.dev_server_port }
+      assert_match(/devServerPort/, error.message)
+      assert_match(/Integer/, error.message)
+    end
+  end
+
   def test_manifest_is_empty_when_file_missing
     Dir.mktmpdir do |tmpdir|
       shared_json_path = File.join(tmpdir, "petite_vite.json")

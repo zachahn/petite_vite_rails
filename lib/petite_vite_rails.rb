@@ -8,7 +8,10 @@ module PetiteVite
   end
 
   class Config
+    DEFAULT_DEV_SERVER_PORT = 5173
+
     def initialize(shared_json_path:, vite_manifest_relpath:)
+      @shared_json_path = shared_json_path
       @contents = JSON.parse(File.read(shared_json_path))
       @vite_manifest_relpath = vite_manifest_relpath
     end
@@ -18,6 +21,16 @@ module PetiteVite
     def entrypoint_output = @contents.fetch("entrypointOutput")
 
     def frontend_root = @contents.fetch("frontendRoot")
+
+    def dev_server_port
+      return DEFAULT_DEV_SERVER_PORT if !@contents.key?("devServerPort")
+
+      value = @contents.fetch("devServerPort")
+      if !value.is_a?(Integer)
+        raise "Invalid devServerPort in #{@shared_json_path}: expected an Integer, got #{value.inspect}"
+      end
+      value
+    end
 
     def manifest_path = File.join(frontend_root, @vite_manifest_relpath)
 

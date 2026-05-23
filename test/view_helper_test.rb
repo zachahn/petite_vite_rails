@@ -52,6 +52,24 @@ class PetiteViteViewHelperTest < ActionView::TestCase
     end
   end
 
+  def test_vite_tags_in_development_uses_configured_dev_server_port
+    shared_json_path = File.join(@tmpdir, "petite_vite_with_port.json")
+    File.write(shared_json_path, JSON.dump({
+      "buildCommand" => "yarn build",
+      "devServerPort" => 6000,
+      "entrypointOutput" => "/src/main.js",
+      "frontendRoot" => File.join(@tmpdir, "frontend")
+    }))
+    PetiteVite.config = PetiteVite::Config.new(shared_json_path: shared_json_path, vite_manifest_relpath: "manifest.json")
+
+    Rails.env.stub(:development?, true) do
+      tag = vite_tags
+
+      assert_includes tag, %q(<script type="module" src="http://localhost:6000/@vite/client"></script>)
+      assert_includes tag, %q(<script type="module" src="http://localhost:6000/src/main.js"></script>)
+    end
+  end
+
   def test_vite_tags_in_production_emits_stylesheets_module_script_and_modulepreloads_for_entries
     Rails.env.stub(:development?, false) do
       tag = vite_tags

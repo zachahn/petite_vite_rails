@@ -2,9 +2,11 @@ module PetiteVite
   module ViewHelper
     def vite_tags
       if Rails.env.development?
+        port = PetiteVite.config.dev_server_port
+        entrypoint_output = PetiteVite.config.entrypoint_output.sub(%r{^/+}, "")
         <<~SCRIPTS.html_safe
-          <script type="module" src="http://localhost:5173/@vite/client"></script>
-          <script type="module" src="http://localhost:5173/#{PetiteVite.config.entrypoint_output.sub(%r{^/+}, "")}"></script>
+          <script type="module" src="http://localhost:#{port}/@vite/client"></script>
+          <script type="module" src="http://localhost:#{port}/#{entrypoint_output}"></script>
         SCRIPTS
       else
         # https://vite.dev/guide/backend-integration.html

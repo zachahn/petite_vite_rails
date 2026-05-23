@@ -54,10 +54,10 @@ module PetiteViteRails
       run!({ "BUNDLE_GEMFILE" => nil }, ["yarn", "install"], chdir: File.join(workdir, dir), label: "yarn install (#{cell[:name]})")
     end
 
-    def run_install_generator(cell, workdir)
+    def run_install_generator(cell, workdir, dev_server_port:)
       bin_dev = File.join(workdir, "bin/dev")
       File.unlink(bin_dev) if File.exist?(bin_dev)
-      args = ["bundle", "exec", "rails", "g", "petite_vite:install"]
+      args = ["bundle", "exec", "rails", "g", "petite_vite:install", "--dev-server-port", dev_server_port.to_s]
       args += ["--frontend-root", frontend_root(cell)] if cell[:frontend_root]
       run!({ "BUNDLE_GEMFILE" => nil }, args, chdir: workdir, label: "petite_vite:install")
     end
@@ -78,7 +78,7 @@ module PetiteViteRails
       shared_json_path = File.join(workdir, "config/petite_vite.json")
       assert_exists(test, shared_json_path)
       shared = JSON.parse(File.read(shared_json_path))
-      %w[buildCommand entrypointInput entrypointOutput frontendRoot localServerCorsOrigin].each do |key|
+      %w[buildCommand devServerPort entrypointInput entrypointOutput frontendRoot localServerCorsOrigin].each do |key|
         test.assert shared.key?(key), "expected petite_vite.json to have key #{key.inspect}"
       end
       test.assert_equal dir, shared["frontendRoot"]
@@ -113,7 +113,6 @@ module PetiteViteRails
       port
     end
 
-    # Vite port stays at 5173 because view_helper.rb has it hard-coded.
     def rewrite_ports(workdir, rails_port:)
       procfile_path = File.join(workdir, "Procfile.dev")
       procfile = File.read(procfile_path)

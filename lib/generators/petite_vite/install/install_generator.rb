@@ -6,6 +6,8 @@ module PetiteVite
       true
     end
 
+    class_option :dev_server_port, type: :numeric, default: 5173,
+      banner: "Port for the Vite dev server"
     class_option :frontend_root, type: :string, default: "frontend",
       banner: "Path to frontend (Vite) project"
     class_option :rails_development_url, type: :string, default: "http://localhost:3000",
@@ -14,6 +16,7 @@ module PetiteVite
       banner: "Skip the check that frontend (Vite) project exists"
 
     def verify_input
+      dev_server_port!
       frontend_root!
       rails_development_url!
       skip_frontend_check!
@@ -72,6 +75,8 @@ module PetiteVite
             origin: shared.localServerCorsOrigin,
           },
           origin: shared.localServerCorsOrigin,
+          port: shared.devServerPort,
+          strictPort: true,
         },
         build: {
           manifest: true,
@@ -96,6 +101,17 @@ module PetiteVite
     end
 
     private
+
+    def dev_server_port!
+      @options_dev_server_port ||=
+        options
+        .fetch("dev_server_port")
+        .yield_self do |value|
+          port = Integer(value)
+          raise "Invalid option: dev_server_port must be between 1 and 65535" if port < 1 || port > 65535
+          port
+        end
+    end
 
     def frontend_root!
       @options_frontend_root ||=

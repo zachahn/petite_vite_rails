@@ -13,12 +13,13 @@ class PetiteViteE2ETest < Minitest::Test
 
   def run_cell(cell)
     workdir = PetiteViteRails::E2EHarness.prepare_workdir(cell)
-    PetiteViteRails::E2EHarness.run_install_generator(cell, workdir)
+    vite_port = PetiteViteRails::E2EHarness.free_port
+    PetiteViteRails::E2EHarness.run_install_generator(cell, workdir, dev_server_port: vite_port)
     PetiteViteRails::E2EHarness.assert_install_artifacts(self, cell, workdir)
     PetiteViteRails::E2EHarness.run_scaffold_generator(cell, workdir)
     assert_scaffold_artifacts(workdir)
 
-    smoke_dev_mode(cell, workdir)
+    smoke_dev_mode(cell, workdir, vite_port: vite_port)
     smoke_prod_mode(cell, workdir)
   ensure
     if workdir && ENV["KEEP_TMP"] == "0"
@@ -34,7 +35,7 @@ class PetiteViteE2ETest < Minitest::Test
     assert_includes File.read(File.join(workdir, "config/routes.rb")), %(root "petite_vite#page")
   end
 
-  def smoke_dev_mode(cell, workdir)
+  def smoke_dev_mode(cell, workdir, vite_port:)
     rails_port = PetiteViteRails::E2EHarness.free_port
     PetiteViteRails::E2EHarness.rewrite_ports(workdir, rails_port: rails_port)
 
@@ -42,12 +43,12 @@ class PetiteViteE2ETest < Minitest::Test
     register_cleanup(pid)
     begin
       PetiteViteRails::E2EHarness.poll_ready("http://localhost:#{rails_port}/")
-      PetiteViteRails::E2EHarness.poll_ready("http://localhost:5173/@vite/client")
+      PetiteViteRails::E2EHarness.poll_ready("http://localhost:#{vite_port}/@vite/client")
 
       res = PetiteViteRails::E2EHarness.http_get("http://localhost:#{rails_port}/")
-      assert_match %r{http://localhost:5173/src/main\.(tsx|jsx|ts|js)}, res.body
+      assert_match %r{http://localhost:#{vite_port}/src/main\.(tsx|jsx|ts|js)}, res.body
 
-      asset_url = res.body[%r{http://localhost:5173/src/main\.(?:tsx|jsx|ts|js)}]
+      asset_url = res.body[%r{http://localhost:#{vite_port}/src/main\.(?:tsx|jsx|ts|js)}]
       asset_res = PetiteViteRails::E2EHarness.http_get(asset_url)
       assert_equal "200", asset_res.code
       assert_match %r{(text|application)/javascript}, asset_res["content-type"].to_s
