@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    petite_vite_rails (0.0.0)
+    petite_vite_rails (0.1.0)
       rails (>= 8.0.0)
 
 GEM
