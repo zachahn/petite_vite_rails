@@ -150,10 +150,12 @@ module PetiteVite
 
     def frontend_source_main!
       @frontend_source_main ||= begin
-        candidates = %w[main.ts main.tsx main.js main.jsx]
-        found = candidates.find { |c| File.exist?(File.join(destination_root, frontend_root!, "src", c)) }
+        basenames = %w[main index]
+        extnames = %w[ts tsx js jsx]
+        found = Dir.glob("{#{basenames.join(",")}}.{#{extnames.join(",")}}", base: File.join(destination_root, frontend_root!, "src")).first
         unless found
-          raise "Expected one of #{candidates.map { |c| "src/#{c}" }.join(", ")} to exist in #{frontend_root!}."
+          candidates = basenames.product(extnames).map { |b, e| "src/#{b}.#{e}" }
+          raise "Expected one of #{candidates.join(", ")} to exist in #{frontend_root!}."
         end
         "/src/#{found}"
       end
