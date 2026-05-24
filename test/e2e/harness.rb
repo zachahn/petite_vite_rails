@@ -50,7 +50,8 @@ module PetiteViteRails
 
     def generate_frontend(cell, workdir)
       dir = frontend_root(cell)
-      run!({"BUNDLE_GEMFILE" => nil}, ["yarn", "create", "vite", dir, "--template", cell[:frontend_template]], chdir: workdir, label: "yarn create vite (#{cell[:name]})")
+      cmd = cell.fetch(:create_command) + [dir]
+      run!({"BUNDLE_GEMFILE" => nil}, cmd, chdir: workdir, label: "create frontend (#{cell[:name]})")
       run!({"BUNDLE_GEMFILE" => nil}, ["yarn", "install"], chdir: File.join(workdir, dir), label: "yarn install (#{cell[:name]})")
     end
 
