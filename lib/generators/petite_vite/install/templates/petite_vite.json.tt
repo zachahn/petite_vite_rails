@@ -1,0 +1,10 @@
+<%= JSON.pretty_generate(
+  {
+    buildCommand: nil,
+    frontendInput: frontend_source_main!,
+    frontendOutput: frontend_output!,
+    frontendRoot: frontend_root!,
+    viteCorsOrigin: rails_development_url!,
+    viteDevServerPort: vite_dev_server_port!
+  }
+) %>

@@ -1,0 +1,4 @@
+#!/usr/bin/env waffles --chdir-script-dir
+
+cd .. && env BUNDLE_GEMFILE=gemfiles/rails-8-0 ./bin/rails-test
+cd .. && env BUNDLE_GEMFILE=gemfiles/rails-8-1 ./bin/rails-test

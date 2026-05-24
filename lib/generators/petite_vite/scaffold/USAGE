@@ -1,0 +1,17 @@
+Description:
+    Generates a PetiteViteController + page view with a mount div matching
+    the frontend project's index.html. Optionally wires up routes.
+
+Options:
+    --route-root
+        Adds `root "petite_vite#page"` to config/routes.rb (skipped if a
+        root route is already defined).
+
+    --route-all
+        Adds `get "*path", to: "petite_vite#page"` to config/routes.rb so
+        client-side routing in the SPA works without extra wiring.
+
+Example:
+    rails generate petite_vite:scaffold
+    rails generate petite_vite:scaffold --route-root
+    rails generate petite_vite:scaffold --route-root --route-all

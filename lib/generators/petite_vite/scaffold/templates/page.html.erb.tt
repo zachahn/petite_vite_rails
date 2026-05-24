@@ -1,0 +1,1 @@
+<div id="<%= mount_id! %>"></div>

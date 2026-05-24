@@ -1,0 +1,20 @@
+Description:
+    Installs PetiteVite
+
+Options:
+    --vite-dev-server-port
+        Port for the Vite dev server. Defaults to 5173.
+
+    --frontend-root
+        Path to the frontend (Vite) project. Defaults to "frontend".
+
+    --rails-development-url
+        Rails development server URL (used as the Vite CORS origin).
+        Defaults to "http://localhost:3000".
+
+    --skip-frontend-check
+        Skip the check that the frontend (Vite) project exists.
+        Defaults to false.
+
+Example:
+    rails generate petite_vite:install
