@@ -16,7 +16,7 @@ bundle add petite_vite_rails
 
 ### 1. Setup Vite Project
 
-Create a Vite project within your Rails app (e.g. with `yarn create vite <path/to/frontend>`). I recommend putting it under the folder `frontend` or `app/frontend`.
+Create a Vite project within your Rails app (e.g. with `yarn create vite <path/to/frontend>`). I recommend putting it under the folder `frontend` or `app/frontend`. Note that `vanilla` is not supported (you may be able to use `jsbundling-rails`?).
 
 ```
 my-rails-site
