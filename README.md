@@ -63,6 +63,10 @@ PetiteVite integrates with `rails assets:precompile`. PetiteVite does NOT suppor
 
 - I like to set up a frontend router. I then create server routes for each frontend-based route. These routes just render the mountpoint, and the frontend app takes care of the rest.
 
+## Similar projects
+
+- [Vite Ruby](https://github.com/elmassimo/vite_ruby)
+
 ## License
 
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
