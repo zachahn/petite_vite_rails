@@ -30,6 +30,13 @@ module PetiteViteRails
         pipeline: "sprockets",
         frontend_template: "react-ts",
         rails_new_args: []
+      },
+      {
+        name: "rails-8-0-propshaft-svelte",
+        rails: "8-0",
+        pipeline: "propshaft",
+        frontend_template: "svelte",
+        rails_new_args: []
       }
     ].freeze
   end
