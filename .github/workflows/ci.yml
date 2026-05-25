@@ -50,7 +50,7 @@ jobs:
           bundle config set --global path "$PWD/vendor/bundle"
           BUNDLE_GEMFILE=gemfiles/rails-8-0 bundle install --jobs 4
           BUNDLE_GEMFILE=gemfiles/rails-8-1 bundle install --jobs 4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 20
       - run: corepack enable
