@@ -66,6 +66,7 @@ PetiteVite integrates with `rails assets:precompile`. PetiteVite does NOT suppor
 ## Similar projects
 
 - [Vite Ruby](https://github.com/elmassimo/vite_ruby)
+- [RailsVite](https://github.com/skryukov/rails_vite)
 
 ## License
 
