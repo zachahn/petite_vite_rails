@@ -5,7 +5,7 @@ gemspec
 
 gem "puma"
 gem "sqlite3"
-gem "minitest", "~> 5.2"
+gem "minitest", "~> 6.0"
 gem "rails", "~> 8.1.0"
 gem "debug", ">= 1.0.0"
 gem "standard", require: false
