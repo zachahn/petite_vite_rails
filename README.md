@@ -1,10 +1,21 @@
 # A Petite Vite integration Rails
 
-A small Rails plugin that wires a Vite frontend into a Rails app. It provides a `vite_tags` view helper, an install generator, and rake task hooks — nothing more.
+PetiteVite is small Rails plugin that wires a standard Vite frontend into a Rails app. It provides a convention of keeping your Rails and Vite configuration in sync, as well as a few integration helpers.
 
-The Vite project lives in a subdirectory (e.g. `frontend/`) and is wired up as a [yarn workspace](https://yarnpkg.com/features/workspaces).
+Whether PetiteVite fits your use-case depends on what you need.
 
-In development, `vite_tags` emits script tags pointing at the Vite dev server. In production, it reads Vite's `manifest.json` and emits hashed asset tags with `modulepreload` links, following Vite's [backend integration](https://vite.dev/guide/backend-integration.html) recipe.
+**Pros**
+
+- **Just a configuration bridge.** There is no companion npm package to install, version, or keep in sync with the gem. Fewer moving parts means less to break and less to maintain.
+- **You own the Vite project.** You can create your Vite app using standard Vite templates. You own its configuration, and you don't have to learn a plugin's wrapper around anything.
+- **Standard tooling.** Rails developers will be familiar with the backend codebase, and Vite developers will be familiar with the frontend codebase. There is nothing exotic to deploy or learn.
+- **Small surface area.** A view helper, an install generator, a scaffold generator, and a couple of rake task hooks.
+
+**Cons**
+
+- **Fewer features.** PetiteVite does not offer a deep integration with Rails. You stay closer to raw Vite, but you're able to configure it however you'd like.
+- **Some manual setup.** You will need to create the Vite project yourself. It will help if you're familiar with Vue.
+- **No integration between the Rails router and the frontend router.**
 
 ## Installation
 
