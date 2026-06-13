@@ -15,7 +15,7 @@ Whether PetiteVite fits your use-case depends on what you need.
 
 - **Fewer features.** PetiteVite does not offer a deep integration with Rails. You stay closer to raw Vite, but you're able to configure it however you'd like.
 - **Some manual setup.** You will need to create the Vite project yourself. It will help if you're familiar with Vue.
-- **No integration between the Rails router and the frontend router.**
+- **No integration between the Rails router and the frontend router.** See [TIPS.md](./TIPS.md).
 
 ## Installation
 
@@ -72,7 +72,7 @@ PetiteVite integrates with `rails assets:precompile`. PetiteVite does NOT suppor
 
 ## Tips
 
-- I like to set up a frontend router. I then create server routes for each frontend-based route. These routes just render the mountpoint, and the frontend app takes care of the rest.
+See [TIPS.md](./TIPS.md) for patterns I've found useful, including how to mirror your frontend router with Rails routes so reloads and shared links resolve.
 
 ## Similar projects
 
