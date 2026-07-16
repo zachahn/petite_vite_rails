@@ -11,8 +11,8 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: ruby/setup-ruby@v1.310.0
+      - uses: actions/checkout@v7.0.0
+      - uses: ruby/setup-ruby@v1.316.0
         with:
           ruby-version: 3.4.7
           bundler-cache: true
@@ -29,8 +29,8 @@ jobs:
     env:
       BUNDLE_GEMFILE: ${{ github.workspace }}/${{ matrix.gemfile }}
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: ruby/setup-ruby@v1.310.0
+      - uses: actions/checkout@v7.0.0
+      - uses: ruby/setup-ruby@v1.316.0
         with:
           ruby-version: 3.4.7
           bundler-cache: true
@@ -41,8 +41,8 @@ jobs:
   e2e:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: ruby/setup-ruby@v1.310.0
+      - uses: actions/checkout@v7.0.0
+      - uses: ruby/setup-ruby@v1.316.0
         with:
           ruby-version: 3.4.7
           bundler-cache: true
@@ -50,7 +50,7 @@ jobs:
           bundle config set --global path "$PWD/vendor/bundle"
           BUNDLE_GEMFILE=gemfiles/rails-8-0 bundle install --jobs 4
           BUNDLE_GEMFILE=gemfiles/rails-8-1 bundle install --jobs 4
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v6.4.0
         with:
           node-version: 20
       - run: corepack enable
